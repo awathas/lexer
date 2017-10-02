@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <string>
 #include <map>
+#include <fstream>
 
 using namespace std;
 
@@ -189,10 +190,11 @@ int main() {
 	//Declare objects
 	Lex lex;
 	Token token;
-	
+	ifstream inFile;
+	inFile.open(test.txt);
 	string input = "";
 
-	while (getline(cin, input)) {
+	while (inFile >> input) {
 		// increment the line number
 		
 		char currentChar = '\0';
