@@ -222,6 +222,10 @@ int main() {
 			if (currentChar == '#' && nextChar == '#') {
 				cout << "Invalid syntax: ## is not allowed" << endl;
 			}
+			
+			if (currentChar == '%' && nextChar == '%') {
+				cout << "Special rule: %% is a seperator" << endl;
+			}
 
 			// translate character into column index
 			column = lex.getColumnOf(currentChar);
