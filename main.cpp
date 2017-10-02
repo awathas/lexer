@@ -6,11 +6,12 @@
 using namespace std;
 
 class Lex {
+
 private:
 
 	int states[42][26] = {
 
-		//                     ti  le  d   ,   ;   <   >   {   }   [   ]   (   )   *   ^   :   .   =   -   +   /   "   !   WS  NA  BackUp 
+		//                     ti  le  d   ,   ;   <   >   {   }   [   ]   (   )   *   #   :   .   =   -   +   /   "   !   WS  NA  BackUp 
 
 		/* 0  LOOKAHEAD    */{ -1, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 
@@ -99,39 +100,68 @@ private:
 	};
 
 
+
 	std::map<std::string, int> keyword = {
 
-		{ "while", 1}, {"int", 2}, {"if", 3}, {"fi", 4}, {"else", 5},
-		{"return", 6}, {"read", 7}, {"read", 8}, {"write", 9}, {"boolean", 10},
-		{"float", 11}, {"true", 12}, {"false", 13}, {"string", 14}, {"char", 15}
+		{ "bool", 10 },{ "read", 11 },{ "@", 12 },{ "char", 13 },{ "float", 15 },
+
+		{ "string", 16 },{ "integer", 17 },{ "if", 18 },{ "fi", 19 },{ "else", 20 },
+
+		{ "while", 21 },{ "write", 22 },{ "False", 23 },{ "True", 24 },{ "return", 25 }
 
 	};
 
+
+
 public:
-	int getColumn(char c);
-	int getState(int state, int column);
-	bool acceptingState(int state);
-	bool needsBackup(int state);
-	int getTok_id(int state);
-	int getKeywordID(string lexeme);
+
 	bool isKeyword(string lexeme);
+
+	bool isAcceptingState(int state);
+
+	bool needsBackup(int state);
+
+	int getKeywordId(string lexeme);
+
+	int getColumnOf(char c);
+
+	int getTokenId(int state);
+
+	int getNewState(int state, int column);
+
+	int lookahead(int previous_state, char current_char, char next_char);
+
 };
 
 
 
 struct Token {
+
 	int start = -1;
-	int tok_id;
+
+	int id;
+
+	int lineNumber;
+
 	string lexeme;
 
+
+
 	Token() {
+
 		start = -1;
-		tok_id = -1;
+
+		id = -1;
+
 		lexeme = "";
+
 	}
 
+
+
 	void print() {
-		if (tok_id == 5) {
+
+		if (id == 5) {
 
 			lexeme = lexeme.substr(1, lexeme.length() - 2);
 
@@ -139,227 +169,316 @@ struct Token {
 
 		string additionalOutput = "";
 
-		if (tok_id == 3) {
+		//if (id == 3) {
 
-			additionalOutput += " int= " + lexeme;
+			//additionalOutput += " int= " + lexeme;
 
+		//}
+
+		//if (id == 4) {
+
+			//additionalOutput += " float= " + lexeme;
+
+		//}
+
+		
+
+		if (id <= 25 && id >= 10)
+		{
+			cout << "(Token: keyword" << right << setw(2) << " line = " << to_string(lineNumber) << " str= \"" + lexeme + "\"" << additionalOutput << ")" << endl;
+		}
+		else if (id == 2)
+		{
+			cout << "(Token: identifier" << right << setw(2) << " line = " << to_string(lineNumber) << " str = \"" + lexeme + "\"" << additionalOutput << ")" << endl;
+		}
+		else
+		{
+			cout << "(Tok: id= " << right << setw(2) << to_string(id) << " line= " << to_string(lineNumber) << " str= \"" + lexeme + "\"" << additionalOutput << ")" << endl;
 		}
 
-		if (tok_id == 4) {
-
-			additionalOutput += " float= " + lexeme;
-
-		}
-
-		cout << "(Tok: id= " << right << setw(2) << to_string(tok_id) <<
-
-			" str= \"" + lexeme + "\"" << additionalOutput << ")" << endl;
 	}
 
 };
 
+
+
 int main() {
 	Lex lex;
 	Token token;
-	
+	int lineNumber = 0;
 	string input = "";
 
 	while (getline(cin, input)) {
-		
-
+		// increment the line number
+		lineNumber++;
 		char currentChar = '\0';
 		char nextChar = '\0';
 		int column = -1;
 		int state = 1;
 		int previousState = 1;
-		bool alreadyBackedUp = false;
+		bool alreadyBackedup = false;
 		bool comment = false;
 
-		//tokenizing inputs
-
-		for (int i = 0; i < input.length(); i++)
-		{
-			//get characters one by one and set current chars and next chars
+		// tokenize the input
+		for (int i = 0; i < input.length(); i++) {
+			// get character at current character pointer
 			currentChar = input[i];
+
+			// get the next character
 			nextChar = input[i + 1];
 
+			// if we have a comment
 			if (currentChar == '/' && nextChar == '/') {
 				comment = true;
 				currentChar = ' ';
 			}
 
-			//translate character into comlumn index
-			column = lex.getColumn(currentChar);
+			if (currentChar == '#' && nextChar == '#') {
+				cout << "Invalid syntax: ## is not allowed" << endl;
+			}
 
+			// translate character into column index
+			column = lex.getColumnOf(currentChar);
+
+			// set the token start pointer
+			// if the token_start is not set
 			if (token.start == -1) {
+
 				// if the current charactor is not white space
 				if (column != 23) {
+
 					// set token_start to current character pointer
 					token.start = i;
 				}
 			}
 
+			// store the current state as the previous state
 			previousState = state;
-			//find new state from table
-			state = lex.getState(state, column);
 
+			// find new state from table
+			state = lex.getNewState(state, column);
+
+			// Perform a lookahead if needed
 			if (state == 0) {
-				if (currentChar == '.') {
-					if (isdigit(nextChar))
-						state = 6;
-					else
-						state = 5;
-
-				}
-				if (lex.acceptingState(state)) {
+				state = lex.lookahead(previousState, currentChar, nextChar);
+				if (lex.isAcceptingState(state)) {
 					i--;
-					alreadyBackedUp = true;
+					alreadyBackedup = true;
 				}
 			}
 
-			//check if token has been found
-			//aka checking for accepting states
-			if (lex.acceptingState(state)) {
-				//backup
-				if (lex.needsBackup(state) && !alreadyBackedUp) {
+			// check if a token has been found
+			if (lex.isAcceptingState(state)) {
+
+				// back up the character pointer if needed
+				if (lex.needsBackup(state) && !alreadyBackedup) {
 					i--;
 				}
-				alreadyBackedUp = false;
-			}
 
-			token.lexeme = input.substr(token.start, i - token.start + 1);
-			token.start = -1;
-			token.tok_id = lex.getTok_id(state);
+				alreadyBackedup = false;
 
-			//if token is identifier
-			if (token.tok_id == 2) {
-				//if identifer is a keyword
-				if (lex.isKeyword(token.lexeme)) {
-					//set token to keyword
-					token.tok_id = lex.getKeywordID(token.lexeme);
+				// grab the lexeme
+				token.lexeme = input.substr(token.start, i - token.start + 1);
+
+				// reset the token start pointer
+				token.start = -1;
+
+				// set the token id
+				token.id = lex.getTokenId(state);
+
+				// if token is an identifier
+				if (token.id == 2) {
+
+					// if the identifier is a keyword
+					if (lex.isKeyword(token.lexeme)) {
+
+						// set token to keyword
+						token.id = lex.getKeywordId(token.lexeme);
+					}
 				}
-			}
 
-			token.print();
-			state = 1;
+				// set the token line number
+				token.lineNumber = lineNumber;
+
+				token.print();
+
+				// reset the state
+				state = 1;
+			}
 
 			if (comment) {
 				break;
 			}
-		}
+		} 
+	} 
+
+	 // check for eof
+
+	if (cin.eof()) {
+		token.id = 0;
+		token.lexeme = "";
+		token.lineNumber = lineNumber;
+		token.print();
 	}
-}
-
-int Lex::getColumn(char c) {
-	if (isalpha(c) || c == '_' ) 
-		return 1;
-	if (isdigit(c))
-		return 2;
-	if (isspace(c))
-		return 3;
-
-	switch (c) {
-	case ',':
-		return 3;
-		break;
-	case ';':
-		return 4;
-		break;
-	case '<':
-		return 5;
-		break;
-	case '>':
-		return 6;
-		break;
-	case '{':
-		return 7;
-		break;
-	case '}':
-		return 8;
-		break;
-	case '[':
-		return 9;
-		break;
-	case ']':
-		return 10;
-		break;
-	case '(':
-		return 11;
-		break;
-	case ')':
-		return 12;
-		break;
-	case '*':
-		return 13;
-		break;
-	case '^':
-		return 14;
-		break;
-	case ':':
-		return 15;
-		break;
-	case '.':
-		return 16;
-		break;
-	case '=':
-		return 17;
-		break;
-	case '-':
-		return 18;
-		break;
-	case '+':
-		return 19;
-		break;
-	case '/':
-		return 20;
-		break;
-	case '"':
-		return 21;
-		break;
-	case '!':
-		return 22;
-		break;
-	default:
-		return 24;
-	}
-
-	return 39;		
-	
-}
-
-int Lex::getState(int state, int column) {
-	return states[state][column];
-}
-
-bool Lex::needsBackup(int state) {
-	if (states[state][25] == 1)
-		return true;
-	else
-		return false;
+	return 0;
 }
 
 
-
-bool Lex::acceptingState(int state) {
-	if (states[state][25] != -1)
-		return true;
-	else
-		return false;
-}
-
-int Lex::getTok_id(int state) {
-	return states[state][0];
-}
-
-int Lex::getKeywordID(string lexeme) {
-	if (keyword[lexeme] != 0)
-		return keyword[lexeme];
-	return 3;
-}
 
 bool Lex::isKeyword(string lexeme) {
 	if (keyword[lexeme] != 0)
 		return true;
-	else
-		return false;
+	return false;
+}
+
+
+
+bool Lex::isAcceptingState(int state) {
+	if (states[state][25] != -1) return true;
+	return false;
+}
+
+
+
+bool Lex::needsBackup(int state) {
+	if (states[state][25] == 1) return true;
+	return false;
+}
+
+
+
+int Lex::getKeywordId(string lexeme) {
+	if (keyword[lexeme] != 0)
+		return keyword[lexeme];
+	return 3;
+
+}
+
+
+
+int Lex::getNewState(int state, int column) {
+	return states[state][column];
+}
+
+
+
+int Lex::getTokenId(int state) {
+	return states[state][0];
+}
+
+
+
+int Lex::lookahead(int previous_state, char current_char, char next_char) {
+	switch (previous_state) {
+	case 4:
+		if (current_char == '.') {
+			if (isdigit(next_char)) { return 6; }
+			else { return 5; }
+		}
+		break;
+	default: return 39;
+	}
+	return 39; // This should never be executed since the switch statement has a default case
+}
+
+
+
+int Lex::getColumnOf(char c) {
+	if (isalpha(c) || c == '_')  
+		return 1;
+
+	if (isdigit(c))             
+		return 2;
+
+	if (isspace(c))              
+		return 23;
+
+	switch (c) {
+	case ',':               
+		return 3;       
+		break;
+
+	case ';':				
+		return 4;       
+		break;
+
+	case '<':               
+		return 5;       
+		break;
+
+	case '>':                
+		return 6;       
+		break;
+
+	case '{':               
+		return 7;       
+		break;
+
+	case '}':               
+		return 8;       
+		break;
+
+	case '[':               
+		return 9;       
+		break;
+
+	case ']':               
+		return 10;     
+		break;
+
+	case '(':                
+		return 11;      
+		break;
+
+	case ')':               
+		return 12;     
+		break;
+
+	case '*':               
+		return 13;     
+		break;
+
+	case '#':                
+		return 1;      
+		break;
+
+	case ':':                
+		return 15;     
+		break;
+
+	case '.':               
+		return 16;    
+		break;
+
+	case '=':                
+		return 17;      
+		break;
+
+	case '-':               
+		return 18;     
+		break;
+
+	case '+':                
+		return 19;     
+		break;
+
+	case '/':               
+		return 20;      
+		break;
+
+	case '"':               
+		return 21;      
+		break;
+
+	case '!':                
+		return 22;      
+		break;
+
+	default:                 
+		return 24;
+
+	}
+
+	return 39; // This should never be executed since the switch statement has a default case
+
 }
