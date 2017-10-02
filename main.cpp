@@ -191,7 +191,7 @@ int main() {
 	Lex lex;
 	Token token;
 	ifstream inFile;
-	inFile.open(test.txt);
+	inFile.open("test.txt");
 	string input = "";
 
 	while (inFile >> input) {
