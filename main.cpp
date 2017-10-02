@@ -294,14 +294,7 @@ int main() {
 			}
 		} 
 	} 
-
-	 // check for eof
-
-	if (cin.eof()) {
-		token.id = 0;
-		token.lexeme = "";
-		token.print();
-	}
+	system("pause");
 	return 0;
 }
 
