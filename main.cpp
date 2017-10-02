@@ -190,12 +190,12 @@ int main() {
 	//Declare objects
 	Lex lex;
 	Token token;
+	//opens text file named "test.txt"
 	ifstream inFile;
 	inFile.open("test.txt");
 	string input = "";
-
+	//Uses while loop to go thorugh input from text file
 	while (inFile >> input) {
-		// increment the line number
 		
 		char currentChar = '\0';
 		char nextChar = '\0';
@@ -218,11 +218,11 @@ int main() {
 				comment = true;
 				currentChar = ' ';
 			}
-
+			//if we have two consecutive #'s
 			if (currentChar == '#' && nextChar == '#') {
 				cout << "Invalid syntax: ## is not allowed" << endl;
 			}
-			
+			//if there are two percentage signs
 			if (currentChar == '%' && nextChar == '%') {
 				cout << "Special rule: %% is a seperator" << endl;
 			}
