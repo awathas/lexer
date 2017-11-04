@@ -1,0 +1,29 @@
+FOLLOW(PGM) = { $ }
+
+FOLLOW(Slist) = { brace2 }
+
+FOLLOW(Stmt) = { semi }
+
+FOLLOW(S_Out) = { semi }
+
+FOLLOW(Y1) = { semi }
+
+FOLLOW(Elist) = { paren2 }
+
+FOLLOW(Elist2) = { paren2 }
+
+FOLLOW(E) = { comma, paren2, semi }
+
+FOLLOW(X1) = { comma, paren2, semi }
+
+FOLLOW(T) = { plus, minus, comma, paren2, semi }
+
+FOLLOW(X2) = { plus, minus, comma, paren2, semi }
+
+FOLLOW(F) = { aster, slash, caret, plus, minus, comma, paren2, semi }
+
+FOLLOW(Fatom) = { aster, slash, caret, plus, minus, comma, paren2, semi }
+
+FOLLOW(Opadd) = { id, int, float, string, paren1 }
+
+FOLLOW(Opmul) = { id, int, float, string, paren1 }

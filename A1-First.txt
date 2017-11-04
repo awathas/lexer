@@ -1,0 +1,29 @@
+FIRST(Pgm) = { kwdprog }
+
+FIRST(Slist) = { kwdprint, id, eps}
+
+FIRST(Stmt) = { kwdprint, id }
+
+FIRST(S_Out) = { kwdprint }
+
+FIRST(Y1) = { id, int, float, string, paren1, kwdinput }
+
+FIRST(Elist) = { id, int, float, string, paren1, eps }
+
+FIRST(Elist2) = { comma }
+
+FIRST(E) = { id, int, float, string, paren1 }
+
+FIRST(X1) = { plus, minus, eps }
+
+FIRST(T) = { id, int, float, string, paren1 }
+
+FIRST(X2) = { aster, slash, caret, eps }
+
+FIRST(F) = { id, int, float, string, paren1 }
+
+FIRST(Fatom) = { id, int, float, string }
+
+FIRST(Opadd) = { plus, minus }
+
+FIRST(Opmul) = { aster, slash, caret }
