@@ -6,13 +6,13 @@
 * @author Anthony Nguyen, Sae Hun Kim
 */
 
-#include "a1parser.h"
+#include "Parser.h"
 
-A1Parser::A1Parser(queue<A2Lexer::Token> tokenQueue) {
+Parser::Parser(queue<Lexer::Token> tokenQueue) {
 	token_queue = tokenQueue;
 }
 
-void A1Parser::start_parse() {
+void Parser::start_parse() {
 	cout << "*** Starting syntactic analysis ***\n" << endl;
 
 	// Push $ (an end marker) onto the stack.
@@ -25,7 +25,7 @@ void A1Parser::start_parse() {
 	while (!symbol_stack.empty()) {
 		// Let top_symbol = top of stack and next_token = incoming token.
 		Symbol top_symbol = symbol_stack.back();
-		A2Lexer::Token next_token = token_queue.front();
+		Lexer::Token next_token = token_queue.front();
 
 		// If top_symbol is a terminal
 		if (top_symbol.isTerminal()) {
@@ -72,7 +72,7 @@ void A1Parser::start_parse() {
 *
 * @param symbol the current symbol
 */
-void A1Parser::push_symbol(Symbol symbol) {
+void Parser::push_symbol(Symbol symbol) {
 	symbol_stack.push_back(symbol);
 	print_trace();
 }
@@ -82,7 +82,7 @@ void A1Parser::push_symbol(Symbol symbol) {
 * Pops a symbol off the "top" of the symbol_stack and calls the function
 * print_trace().
 */
-void A1Parser::pop_symbol() {
+void Parser::pop_symbol() {
 	symbol_stack.pop_back();
 	print_trace();
 }
@@ -91,12 +91,12 @@ void A1Parser::pop_symbol() {
 * Prints all the elements in the symbol_stack and outputs the current
 * front token in token_queue.
 */
-void A1Parser::print_trace() {
+void Parser::print_trace() {
 	for (int i = 0; i < symbol_stack.size(); i++) {
 		cout << symbol_stack[i].getAbbreviation();
 	}
-	if (!token_queue.empty()) { 
-		cout << "\t\t\t"; 
+	if (!token_queue.empty()) {
+		cout << "\t\t\t";
 		token_queue.front().print();
 	}
 }
@@ -105,7 +105,7 @@ void A1Parser::print_trace() {
 * Prints an error message that displays the current symbol and the incoming token.
 * Also prints out the line number if known.
 */
-void A1Parser::print_error() {
+void Parser::print_error() {
 	cout << "An error has occured: " << endl;
 
 	// the token (i.e., column header)
@@ -130,7 +130,7 @@ void A1Parser::print_error() {
 *
 * @returns true if the symbol is a terminal, otherwise return false
 */
-bool A1Parser::Symbol::isTerminal() {
+bool Parser::Symbol::isTerminal() {
 	return ((name[0] >= 'a' && name[0] <= 'z') || (name[0] == '$'));
 }
 
@@ -139,7 +139,7 @@ bool A1Parser::Symbol::isTerminal() {
 *
 * @returns true if the symbol matches the token, otherwise return false
 */
-bool A1Parser::Symbol::equals(A2Lexer::Token token) {
+bool Parser::Symbol::equals(Lexer::Token token) {
 	return (getTokenId() == token.id);
 }
 
@@ -148,7 +148,7 @@ bool A1Parser::Symbol::equals(A2Lexer::Token token) {
 *
 * @returns the matching token id. If symbol does not match a token, returns -1
 */
-int A1Parser::Symbol::getTokenId() {
+int Parser::Symbol::getTokenId() {
 	if (name == "kwdprog") { return 10; }
 	else if (name == "brace1") { return 33; }
 	else if (name == "brace2") { return 34; }
@@ -177,7 +177,7 @@ int A1Parser::Symbol::getTokenId() {
 *
 * @returns a shortened symbol name
 */
-string A1Parser::Symbol::getAbbreviation() {
+string Parser::Symbol::getAbbreviation() {
 	if (name == "E") { return "E."; }
 	else if (name == "Elist") { return "EL."; }
 	else if (name == "Elist2") { return "E2."; }
@@ -223,7 +223,7 @@ string A1Parser::Symbol::getAbbreviation() {
 /**
 * Returns a symbol representing a start symbol
 */
-A1Parser::Symbol A1Parser::Symbol::START_SYMBOL() {
+Parser::Symbol Parser::Symbol::START_SYMBOL() {
 	Symbol start_symbol;
 	start_symbol.name = "Pgm";
 	return start_symbol;
@@ -232,7 +232,7 @@ A1Parser::Symbol A1Parser::Symbol::START_SYMBOL() {
 /**
 * Returns a symbol representing an end marker
 */
-A1Parser::Symbol A1Parser::Symbol::END_MARKER() {
+Parser::Symbol Parser::Symbol::END_MARKER() {
 	Symbol end_marker;
 	end_marker.name = "$";
 	return end_marker;
@@ -244,7 +244,7 @@ A1Parser::Symbol A1Parser::Symbol::END_MARKER() {
 * @param symbol a symbol representing a row of the predictive parser table
 * @return the matching row index. If no match is found, returns a -1
 */
-int A1Parser::GrammarMatrix::getRow(A1Parser::Symbol symbol) {
+int Parser::GrammarMatrix::getRow(Parser::Symbol symbol) {
 	if (symbol.name == "Pgm") { return  0; }
 	else if (symbol.name == "Slist") { return  1; }
 	else if (symbol.name == "Stmt") { return  2; }
@@ -269,7 +269,7 @@ int A1Parser::GrammarMatrix::getRow(A1Parser::Symbol symbol) {
 * @param token a token representing a column of the predictive parser table
 * @return the matching column index. If no match is found, returns a -1
 */
-int A1Parser::GrammarMatrix::getColumn(A2Lexer::Token token) {
+int Parser::GrammarMatrix::getColumn(Lexer::Token token) {
 	if (token.id == 10) { return 0; }
 	else if (token.id == 23) { return 1; }
 	else if (token.id == 22) { return 2; }
@@ -298,7 +298,7 @@ int A1Parser::GrammarMatrix::getColumn(A2Lexer::Token token) {
 * @param token a token representing a column of the predictive parser table
 * @return the matching column header. If no match is found, returns an error column header
 */
-string A1Parser::GrammarMatrix::getColumnHeader(A2Lexer::Token token) {
+string Parser::GrammarMatrix::getColumnHeader(Lexer::Token token) {
 	if (token.id == 10) { return "kwdprog"; }
 	else if (token.id == 23) { return "kwdprint"; }
 	else if (token.id == 22) { return "kwdinput"; }
@@ -329,7 +329,7 @@ string A1Parser::GrammarMatrix::getColumnHeader(A2Lexer::Token token) {
 * @param token the incoming token
 * @return a production rule
 */
-vector<A1Parser::Symbol> A1Parser::GrammarMatrix::get(A1Parser::Symbol symbol, A2Lexer::Token token) {
+vector<Parser::Symbol> Parser::GrammarMatrix::get(Parser::Symbol symbol, Lexer::Token token) {
 	string production = table[getRow(symbol)][getColumn(token)];
 
 	istringstream ss(production);
@@ -337,9 +337,9 @@ vector<A1Parser::Symbol> A1Parser::GrammarMatrix::get(A1Parser::Symbol symbol, A
 
 	vector<string> symbol_names(begin, end);
 
-	vector<A1Parser::Symbol> symbols;
+	vector<Parser::Symbol> symbols;
 	for (int i = 0; i < symbol_names.size(); i++) {
-		A1Parser::Symbol s;
+		Parser::Symbol s;
 		s.name = symbol_names[i];
 		symbols.push_back(s);
 	}
