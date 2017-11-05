@@ -6,12 +6,13 @@
 * @author Anthony Nguyen, Sae Hun Kim
 */
 
-#include "a2lexer.h";
+
+#include "Lexer.h";
 
 /**
 * Return the Queue of tokens
 */
-queue<A2Lexer::Token> A2Lexer::getTokenQueue() {
+queue<Lexer::Token> Lexer::getTokenQueue() {
 	return tokenQueue;
 }
 
@@ -20,7 +21,7 @@ queue<A2Lexer::Token> A2Lexer::getTokenQueue() {
 *
 * Populate the keyword map with the appropriate token ID(value) of the token type(key).
 */
-A2Lexer::A2Lexer() {
+Lexer::Lexer() {
 	key_word = {
 		{ "prog", 10 },{ "main", 11 },{ "fcn", 12 },{ "class", 13 },{ "float", 15 },
 		{ "int", 16 },{ "string", 17 },{ "if", 18 },{ "elsif", 19 },{ "else", 20 },
@@ -31,7 +32,7 @@ A2Lexer::A2Lexer() {
 /**
 * Executes the lexer program. This function is the main entry point of the program.
 */
-void A2Lexer::execute(void) {
+void Lexer::execute(void) {
 	cout << "If you are not using input redirection with the program, " << endl
 		<< "the program will simply return the results of a lexical analysis." << endl
 		<< "To perform a syntactic analysis, please redirect input from a file to the program.\n" << endl;
@@ -75,7 +76,7 @@ void A2Lexer::execute(void) {
 * @param textLine the line of text to get a token from
 * @return The token that was found
 */
-A2Lexer::Token A2Lexer::next_token(string& textLine) {
+Lexer::Token Lexer::next_token(string& textLine) {
 	Token token;
 	char currentChar = '\0';
 	char nextChar = '\0';
@@ -163,7 +164,7 @@ A2Lexer::Token A2Lexer::next_token(string& textLine) {
 *
 * @param lexeme the lexeme to identify
 */
-bool A2Lexer::isKeyword(string lexeme) {
+bool Lexer::isKeyword(string lexeme) {
 	if (key_word[lexeme] != 0) return true;
 	return false;
 }
@@ -173,7 +174,7 @@ bool A2Lexer::isKeyword(string lexeme) {
 *
 * @param state the state id to check
 */
-bool A2Lexer::isAcceptingState(int state) {
+bool Lexer::isAcceptingState(int state) {
 	if (state_table[state][25] != -1) return true;
 	return false;
 }
@@ -183,7 +184,7 @@ bool A2Lexer::isAcceptingState(int state) {
 *
 * @param state the state's id
 */
-bool A2Lexer::needsBackup(int state) {
+bool Lexer::needsBackup(int state) {
 	if (state_table[state][25] == 1) return true;
 	return false;
 }
@@ -195,7 +196,7 @@ bool A2Lexer::needsBackup(int state) {
 *
 * @param keyword the keyword value
 */
-int A2Lexer::getKeywordId(string keyword) {
+int Lexer::getKeywordId(string keyword) {
 	if (key_word[keyword] != 0) return key_word[keyword];
 	return 3; // return state "end id"
 }
@@ -205,7 +206,7 @@ int A2Lexer::getKeywordId(string keyword) {
 *
 * @param c the input character
 */
-int A2Lexer::getColumnOf(char c) {
+int Lexer::getColumnOf(char c) {
 	if (isalpha(c) || c == '_')  return 1;
 	if (isdigit(c))              return 2;
 	if (isspace(c))              return 23;
@@ -242,7 +243,7 @@ int A2Lexer::getColumnOf(char c) {
 *
 * @param state the state's id
 */
-int A2Lexer::getTokenId(int state) {
+int Lexer::getTokenId(int state) {
 	return state_table[state][0];
 }
 
@@ -252,7 +253,7 @@ int A2Lexer::getTokenId(int state) {
 * @param state  the current state's id
 * @param column the column index that corresponds to the given input
 */
-int A2Lexer::getNewState(int state, int column) {
+int Lexer::getNewState(int state, int column) {
 	return state_table[state][column];
 }
 
@@ -263,7 +264,7 @@ int A2Lexer::getNewState(int state, int column) {
 * @param current_char   the current character
 * @param next_char      the character at the next character pointer
 */
-int A2Lexer::lookahead(int previous_state, char current_char, char next_char) {
+int Lexer::lookahead(int previous_state, char current_char, char next_char) {
 	switch (previous_state) {
 	case 4: // If the previous state was "in int"
 		if (current_char == '.') {
@@ -281,7 +282,7 @@ int A2Lexer::lookahead(int previous_state, char current_char, char next_char) {
 *
 * Assigns the default values for the member variables start, id and lexeme.
 */
-A2Lexer::Token::Token() {
+Lexer::Token::Token() {
 	start = -1;
 	id = -1;
 	isNothing = false;
@@ -293,7 +294,7 @@ A2Lexer::Token::Token() {
 *
 * (Tok: id= [TOKEN_ID] line= [LINE_NUMBER] str= "[LEXEME]" (int||float) = [VALUE])
 */
-void A2Lexer::Token::print() {
+void Lexer::Token::print() {
 	string temp_lexeme = lexeme;
 	if (id == 5) { // if token is a string
 		temp_lexeme = temp_lexeme.substr(1, temp_lexeme.length() - 2);
@@ -312,7 +313,7 @@ void A2Lexer::Token::print() {
 /**
 * Return an eof token
 */
-A2Lexer::Token A2Lexer::Token::EOF_TOKEN() {
+Lexer::Token Lexer::Token::EOF_TOKEN() {
 	Token token;
 	token.lexeme = "$";
 	token.id = 0;
