@@ -7,8 +7,8 @@
 * @author Anthony Nguyen, Sae Hun Kim
 */
 
-#ifndef LEXER_h
-#define LEXER_h
+#ifndef LEXER_H
+#define LEXER_H
 
 #include <queue>
 #include <map>
