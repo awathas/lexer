@@ -7,18 +7,18 @@
 * @author Anthony Nguyen, Sae Hun Kim
 */
 
-#ifndef A1PARSER_H
-#define A1PARSER_H
+#ifndef PARSER_H
+#define PARSER_H
 
 #include <queue>
 #include <iostream>
 #include <sstream>
 #include <iterator>
 
-#include "a2lexer.h"
+#include "Lexer.h"
 
 //A1 parser class
-class A1Parser {
+class Parser {
 private:
 
 	// Symbol struct that holds info. about the symbol
@@ -37,7 +37,7 @@ private:
 		bool isTerminal();
 
 		// Returns true if the token matches the symbol
-		bool equals(A2Lexer::Token);
+		bool equals(Lexer::Token);
 
 		// A static start symbol with the name: "Pgm" 
 		static Symbol START_SYMBOL();
@@ -73,14 +73,14 @@ private:
 		int getRow(Symbol);
 
 		// Returns the column index based on the token
-		int getColumn(A2Lexer::Token);
+		int getColumn(Lexer::Token);
 	public:
 
 		// Gets the production based on the Symbol row and Token column
-		vector<Symbol> get(Symbol, A2Lexer::Token);
+		vector<Symbol> get(Symbol, Lexer::Token);
 
 		// Gets the header of a column based on a token
-		string getColumnHeader(A2Lexer::Token);
+		string getColumnHeader(Lexer::Token);
 	};
 
 	// Predictive Parser table
@@ -90,7 +90,7 @@ private:
 	vector<Symbol> symbol_stack;
 
 	// Queue to hold the list of tokens
-	queue<A2Lexer::Token> token_queue;
+	queue<Lexer::Token> token_queue;
 
 	// Pushes a symbol on the stack of symbols
 	void push_symbol(Symbol);
@@ -105,10 +105,9 @@ private:
 	void print_error();
 public:
 	// Class constructor
-	A1Parser(queue<A2Lexer::Token> tokenQueue);
+	Parser(queue<Lexer::Token> tokenQueue);
 
 	// Starts the syntatic analysis
 	void start_parse();
 };
 
-#endif
