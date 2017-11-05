@@ -3,7 +3,7 @@
 *
 * See the header comment on "a2lexer.h" for more information.
 *
-* @author Anthony Nguyen, Sae Hun Kim
+* Alex Athas, Jeffrey Liv
 */
 
 
