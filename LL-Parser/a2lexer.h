@@ -7,8 +7,8 @@
 * @author Anthony Nguyen, Sae Hun Kim
 */
 
-#ifndef A2LEXER_H
-#define A2LEXER_H
+#ifndef LEXER_h
+#define LEXER_h
 
 #include <queue>
 #include <map>
@@ -18,9 +18,9 @@
 
 using namespace std;
 
-class A2Lexer {
+class Lexer {
 public:
-	// An object representing a token of the A2 lexicon
+	// An object representing a token of the lexicon
 	struct Token {
 		int start;
 		int id;
@@ -35,7 +35,7 @@ public:
 	};
 
 	//Default constructor for the A2Lexer class.
-	A2Lexer();
+	Lexer();
 
 	// Execute the lexer
 	void execute();
