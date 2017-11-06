@@ -207,7 +207,7 @@ int Lexer::getKeywordId(string keyword) {
 * @param c the input character
 */
 int Lexer::getColumnOf(char c) {
-	if (isalpha(c) || c == '_')  return 1;
+	if (isalpha(c) || c == '_' || c == '#')  return 1;
 	if (isdigit(c))              return 2;
 	if (isspace(c))              return 23;
 	switch (c) {
@@ -298,13 +298,16 @@ void Lexer::Token::print() {
 	string temp_lexeme = lexeme;
 	if (id == 5) { // if token is a string
 		temp_lexeme = temp_lexeme.substr(1, temp_lexeme.length() - 2);
+		cout << "Token: String     Lexeme: " << temp_lexeme << endl;
 	}
 	string additionalOutput = "";
 	if (id == 3) { // if token is an int
-		additionalOutput += " int = " + temp_lexeme;
+		//additionalOutput += " int = " + temp_lexeme;
+		cout << "Token: Integer     Lexeme: " << temp_lexeme << endl;
 	}
 	else if (id == 4) { // if token is a float
-		additionalOutput += " float = " + temp_lexeme;
+		//additionalOutput += " float = " + temp_lexeme;
+		cout << "Token: Float     Lexeme: " << temp_lexeme << endl;
 	}
 	else if (id <= 25 && id >= 10)
 	{
@@ -317,6 +320,10 @@ void Lexer::Token::print() {
 	else if (id == 6 || id == 7 || (id <= 38 && id >= 33))
 	{
 		cout << "Token: Seperator     Lexeme: " << temp_lexeme << endl;
+	}
+	else if ((id >= 12 && id <= 15) || id == 22 || (id >= 45 && id <= 48) || id >= 52 && id <= 55)
+	{
+		cout << "Token: Operator     Lexeme: " << temp_lexeme << endl;
 	}
 	else
 	{
