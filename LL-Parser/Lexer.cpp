@@ -1,8 +1,6 @@
 /**
 * This file includes the definitions for "lexer.h"
 *
-* 
-*
 * Alex Athas, Jeffrey Liv
 */
 
