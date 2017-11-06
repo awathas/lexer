@@ -4,7 +4,7 @@
 * The purpose of this parser is to take a the output from a A2 lexer and
 * perform a syntatical analysis on it.
 *
-* @author Anthony Nguyen, Sae Hun Kim
+* Alex Athas, Jeffrey Liv
 */
 
 #ifndef PARSER_H
@@ -26,22 +26,16 @@ private:
 
 		// The name of the symbol which is either a terminal or nonterminal
 		string name;
-
 		// Returns the token id of the given corresponding token string
 		int getTokenId();
-
 		// Returns the abbreviation of the nonterminal
 		string getAbbreviation();
-
 		// Returns true if the symbol is terminal and false otherwise
 		bool isTerminal();
-
 		// Returns true if the token matches the symbol
 		bool equals(Lexer::Token);
-
 		// A static start symbol with the name: "Pgm" 
 		static Symbol START_SYMBOL();
-
 		// A static end marker with the name: "$"
 		static Symbol END_MARKER();
 	};
@@ -71,43 +65,35 @@ private:
 
 		// Returns the row index based on the symbol
 		int getRow(Symbol);
-
 		// Returns the column index based on the token
 		int getColumn(Lexer::Token);
 	public:
 
 		// Gets the production based on the Symbol row and Token column
 		vector<Symbol> get(Symbol, Lexer::Token);
-
 		// Gets the header of a column based on a token
 		string getColumnHeader(Lexer::Token);
 	};
 
 	// Predictive Parser table
 	GrammarMatrix parser_table;
-
 	// Stack to hold the list of symbols
 	vector<Symbol> symbol_stack;
-
 	// Queue to hold the list of tokens
 	queue<Lexer::Token> token_queue;
-
 	// Pushes a symbol on the stack of symbols
 	void push_symbol(Symbol);
-
 	// Pops a symbol from the stack of symbols
 	void pop_symbol();
-
 	// Prints traces of the syntatic analysis
 	void print_trace();
-
 	// Prints an error message
 	void print_error();
 public:
 	// Class constructor
 	Parser(queue<Lexer::Token> tokenQueue);
-
 	// Starts the syntatic analysis
 	void start_parse();
 };
 
+#endif
