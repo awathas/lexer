@@ -1,7 +1,7 @@
 /**
-* This header file provides the prototype for a parser of the A1 language.
+* This header file provides the prototype for a parser of the RAT17F language.
 *
-* The purpose of this parser is to take a the output from a A2 lexer and
+* The purpose of this parser is to take a the output from a hand built lexer and
 * perform a syntatical analysis on it.
 *
 * Alex Athas, Jeffrey Liv
