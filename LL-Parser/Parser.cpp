@@ -1,7 +1,7 @@
 /**
-* This file includes the definitions for "parser.h"
+* This file includes the definitions for "Parser.h"
 *
-* See the header comment on "a1parser.h" for more information.
+* See the header comment on "Parser.h" for more information.
 *
 * Alex Athas, Jeffrey Liv
 */
