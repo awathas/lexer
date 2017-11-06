@@ -318,7 +318,7 @@ string Parser::GrammarMatrix::getColumnHeader(Lexer::Token token) {
 	else if (token.id == 33) { return "brace1"; }
 	else if (token.id == 34) { return "brace2"; }
 	else if (token.id == 0) { return  "$"; }
-	else    /* Error */ { return "Error: unknown token in A1 Grammar"; }
+	else    /* Error */ { return "Error: unknown token in RAT17F Grammar"; }
 }
 
 /**
