@@ -23,9 +23,9 @@ queue<Lexer::Token> Lexer::getTokenQueue() {
 */
 Lexer::Lexer() {
 	key_word = {
-		{ "prog", 10 },{ "main", 11 },{ "fcn", 12 },{ "class", 13 },{ "float", 15 },
-		{ "int", 16 },{ "string", 17 },{ "if", 18 },{ "elsif", 19 },{ "else", 20 },
-		{ "while", 21 },{ "input", 22 },{ "print", 23 },{ "new", 24 },{ "return", 25 }
+		{ "bool", 10 },{ "read", 11 },{ "fcn", 12 },{ "char", 13 },{ "float", 15 },
+		{ "integer", 16 },{ "string", 17 },{ "if", 18 },{ "fi", 19 },{ "else", 20 },
+		{ "while", 21 },{ "write", 22 },{ "print", 23 },{ "new", 24 },{ "return", 25 }
 	};
 }
 
@@ -301,13 +301,28 @@ void Lexer::Token::print() {
 	}
 	string additionalOutput = "";
 	if (id == 3) { // if token is an int
-		additionalOutput += " int= " + temp_lexeme;
+		additionalOutput += " int = " + temp_lexeme;
 	}
-	if (id == 4) { // if token is a float
-		additionalOutput += " float= " + temp_lexeme;
+	else if (id == 4) { // if token is a float
+		additionalOutput += " float = " + temp_lexeme;
 	}
-	cout << "(Tok: id= " << right << setw(2) << to_string(id) << " line= " << to_string(lineNumber) <<
-		" str= \"" + temp_lexeme + "\"" << additionalOutput << ")" << endl;
+	else if (id <= 25 && id >= 10)
+	{
+		cout << "Token: Keyword     Lexeme: " << temp_lexeme << endl;
+	}
+	else if (id == 2)
+	{
+		cout << "Token: Identifier     Lexeme: " << temp_lexeme << endl;
+	}
+	else if (id == 6 || id == 7 || (id <= 38 && id >= 33))
+	{
+		cout << "Token: Seperator     Lexeme: " << temp_lexeme << endl;
+	}
+	else
+	{
+		cout << "(Tok: id= " << right << setw(2) << to_string(id) << " line= " << to_string(lineNumber) <<
+			" str= \"" + temp_lexeme + "\"" << additionalOutput << ")" << endl;
+	}
 }
 
 /**
