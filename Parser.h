@@ -17,7 +17,6 @@
 
 #include "Lexer.h"
 
-//A1 parser class
 class Parser {
 private:
 
