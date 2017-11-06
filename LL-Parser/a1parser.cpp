@@ -1,13 +1,14 @@
 /**
-* This file includes the definitions for "a1parser.h"
+* This file includes the definitions for "parser.h"
 *
 * See the header comment on "a1parser.h" for more information.
 *
-* @author Anthony Nguyen, Sae Hun Kim
+* Alex Athas, Jeffrey Liv
 */
 
 #include "Parser.h"
 
+//Parser takes in the queue of tokens
 Parser::Parser(queue<Lexer::Token> tokenQueue) {
 	token_queue = tokenQueue;
 }
@@ -18,10 +19,9 @@ void Parser::start_parse() {
 	// Push $ (an end marker) onto the stack.
 	push_symbol(Symbol::END_MARKER());
 
-	// Push the start (sentence) symbol onto the stack.
+	// Push the start symbol onto the stack.
 	push_symbol(Symbol::START_SYMBOL());
 
-	// While (stack not empty) do
 	while (!symbol_stack.empty()) {
 		// Let top_symbol = top of stack and next_token = incoming token.
 		Symbol top_symbol = symbol_stack.back();
