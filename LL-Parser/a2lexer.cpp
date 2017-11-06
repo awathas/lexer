@@ -1,7 +1,7 @@
 /**
-* This file includes the definitions for "a2lexer.h"
+* This file includes the definitions for "lexer.h"
 *
-* See the header comment on "a2lexer.h" for more information.
+* 
 *
 * Alex Athas, Jeffrey Liv
 */
@@ -17,8 +17,6 @@ queue<Lexer::Token> Lexer::getTokenQueue() {
 }
 
 /**
-* A2Lexer default constructor
-*
 * Populate the keyword map with the appropriate token ID(value) of the token type(key).
 */
 Lexer::Lexer() {
@@ -37,12 +35,13 @@ void Lexer::execute(void) {
 		<< "the program will simply return the results of a lexical analysis." << endl
 		<< "To perform a syntactic analysis, please redirect input from a file to the program.\n" << endl;
 
-	cout << "*** Starting lexcal analysis ***\n" << endl;
+	cout << "*** Starting lexical analysis ***\n" << endl;
 
 	Token token;
 	int lineNumber = 0;
 	string input = "";
 
+	//Deals with input
 	while (getline(cin, input)) {
 		lineNumber++;
 		while (input.length() != 0) {
@@ -59,6 +58,8 @@ void Lexer::execute(void) {
 		}
 	}
 	// check for eof
+	//This will only be useful if the input is redirected from a text file with source code in it.
+	//Otherwise, the lexical analysis does not complete
 	if (cin.eof()) {
 		token.id = 0;
 		token.lexeme = "";
@@ -77,6 +78,7 @@ void Lexer::execute(void) {
 * @return The token that was found
 */
 Lexer::Token Lexer::next_token(string& textLine) {
+	//initalizing token
 	Token token;
 	char currentChar = '\0';
 	char nextChar = '\0';
@@ -95,6 +97,16 @@ Lexer::Token Lexer::next_token(string& textLine) {
 		if (currentChar == '/' && nextChar == '/') {
 			token.isNothing = true;
 			return token;
+		}
+
+		if (currentChar == '%' && nextChar == '%') {
+			cout << "Token: Seperator     Lexeme: %% " << endl;
+			token.isNothing = true;
+			return token;
+		}
+
+		if (currentChar == '#' && nextChar == '#') {
+			cout << "Syntax Error: Cannot have ##" << endl;
 		}
 
 		// translate character into column index
@@ -302,11 +314,9 @@ void Lexer::Token::print() {
 	}
 	string additionalOutput = "";
 	if (id == 3) { // if token is an int
-		//additionalOutput += " int = " + temp_lexeme;
 		cout << "Token: Integer     Lexeme: " << temp_lexeme << endl;
 	}
 	else if (id == 4) { // if token is a float
-		//additionalOutput += " float = " + temp_lexeme;
 		cout << "Token: Float     Lexeme: " << temp_lexeme << endl;
 	}
 	else if (id <= 25 && id >= 10)
@@ -325,10 +335,14 @@ void Lexer::Token::print() {
 	{
 		cout << "Token: Operator     Lexeme: " << temp_lexeme << endl;
 	}
+	else if (id == 0)
+	{
+		cout << endl;
+	}
 	else
 	{
-		cout << "(Tok: id= " << right << setw(2) << to_string(id) << " line= " << to_string(lineNumber) <<
-			" str= \"" + temp_lexeme + "\"" << additionalOutput << ")" << endl;
+		//cout << "(Tok: id= " << right << setw(2) << to_string(id) << " line= " << to_string(lineNumber) <<
+		//	" str= \"" + temp_lexeme + "\"" << additionalOutput << ")" << endl;
 	}
 }
 
