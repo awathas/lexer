@@ -1,10 +1,10 @@
 /**
-* This header file provides the prototype for a lexer of the A2 language. Within that prototype is also
-* the prototype of a token of the A2 language. The purpose of this lexer is to take a A2 high-level
-* program and output the list of tokens in the following format:
-*   - (Tok: id= [TOKEN_ID] line= [LINE_NUMBER] str= "[LEXEME]" (int||float) = [VALUE])
+* Header file for Lexer and is used is Lexer.cpp
+* 
+* 
+*   
 *
-* @author Anthony Nguyen, Sae Hun Kim
+* Alex Athas, Jeffrey
 */
 
 #ifndef LEXER_H
@@ -34,19 +34,16 @@ public:
 		static Token EOF_TOKEN();
 	};
 
-	//Default constructor for the A2Lexer class.
+	//Constructor for lexer class
 	Lexer();
-
 	// Execute the lexer
 	void execute();
-
-	// Founds and returns the first token found
+	// Finds and returns the next token
 	Token next_token(string& textLine);
-
-	// Return the Queue of tokens.
+	// Returns the queue of tokens.
 	queue<Token> getTokenQueue();
 private:
-	// The state table representing the dfa for the A2 lexicon
+	// FSM States Chart
 	int state_table[42][26] = {
 		//                     0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25
 		//                     ti  lu  d   ,   ;   <   >   {   }   [   ]   (   )   *   ^   :   .   =   -   +   /   "   !   WS  NA  BackUp 
@@ -96,31 +93,22 @@ private:
 
 	//Store tokens into a queue.
 	queue<Token> tokenQueue;
-
 	// A map that has the keyword as the "key" and its token id as the "value"
 	map<string, int> key_word;
-
 	// Check if a given lexeme is a keyword.
 	bool isKeyword(string lexeme);
-
 	// Checks if a state number is an accepting state.
 	bool isAcceptingState(int state);
-
 	// Checks if the character pointer needs to be backed up.
 	bool needsBackup(int state);
-
 	// Returns the id of a keyword.
 	int getKeywordId(string lexeme);
-
 	// Gets the corresponding state table's column index of an input character.
 	int getColumnOf(char c);
-
 	// Return token id from the given state.
 	int getTokenId(int state);
-
 	// Returns a new state based on the current state and the input.
 	int getNewState(int state, int column);
-
 	// Returns the id of the correct state for ambiguous tokens.
 	int lookahead(int previous_state, char current_char, char next_char);
 };
