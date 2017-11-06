@@ -1,7 +1,7 @@
 /**
 * Main entry point of the program.
 * 
-* Responsible for executing the A2 lexer and the A1 parser.
+* Responsible for executing the lexer and the parser.
 * Also responsible for linking the output of the lexer to the parser.
 *
 * @author Anthony Nguyen, Sae Hun Kim
