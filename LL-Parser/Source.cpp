@@ -4,7 +4,7 @@
 * Responsible for executing the lexer and the parser.
 * Also responsible for linking the output of the lexer to the parser.
 *
-* @author Anthony Nguyen, Sae Hun Kim
+* Alex Athas, Jeffrey Liv
 */
 
 #include "Parser.h"
