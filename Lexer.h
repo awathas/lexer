@@ -1,9 +1,5 @@
 /**
 * Header file for Lexer and is used is Lexer.cpp
-* 
-* 
-*   
-*
 * Alex Athas, Jeffrey
 */
 
